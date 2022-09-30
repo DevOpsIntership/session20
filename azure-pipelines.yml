@@ -17,4 +17,21 @@ steps:
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
-      az deployment group create   --name ExampleDeployment   --resource-group automation   --template-file appservice.bicep   --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=eastus
+      az deployment group create   --name deploy1app   --resource-group automation   --template-file appservice.bicep   --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=eastus
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(azureServiceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az deployment group create   --name deploy2app   --resource-group automation   --template-file appservice.bicep   --parameters website=host2 linuxFxVersion=adamkwolek/firstimage location=centralus
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(azureServiceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az deployment group create   --name deploy3app   --resource-group automation   --template-file appservice.bicep   --parameters website=dr linuxFxVersion=adamkwolek/sorrypage location=eastus
+
