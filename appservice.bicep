@@ -9,7 +9,7 @@ param  numberOfWorkers int = 1
 param tier string = 'Basic'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
-  name: appServicePlanName
+  name: '${webSiteName}-${appServicePlanName}'
   location: location
   properties: {
     reserved: true
@@ -31,5 +31,6 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
       numberOfWorkers:numberOfWorkers
 
     }
+    httpsOnly:false
   }
 }
