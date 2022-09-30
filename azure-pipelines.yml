@@ -1,0 +1,33 @@
+trigger: none
+
+
+name: Deploy  
+
+variables:
+  vmImageName: 'ubuntu-latest'
+
+  azureServiceConnection: 'mynewsub'
+  resourceGroupName: 'automation'
+  templateFile: 'AppService.bicep'
+pool:
+  vmImage: $(vmImageName)
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(azureServiceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az deployment group create --name Deploy1appservie --resource-group $(resourceGroupName) --template-file $(templateFile)\
+      --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=eastus
+
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(azureServiceConnection)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az deployment group create --name Deploy2appservie --resource-group $(resourceGroupName) --template-file $(templateFile)\
+      --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=centralus
+
