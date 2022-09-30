@@ -17,14 +17,4 @@ steps:
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
-      az deployment group create --name Deploy1appservie --resource-group $(resourceGroupName) --template-file $(templateFile)\
-      --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=eastus
-
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: $(azureServiceConnection)
-    scriptType: bash
-    scriptLocation: inlineScript
-    inlineScript: |
-                az deployment group create   --name ExampleDeployment   --resource-group automation   --template-file appservice.bicep   --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=eastus
-
+      az deployment group create   --name ExampleDeployment   --resource-group automation   --template-file appservice.bicep   --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=eastus
