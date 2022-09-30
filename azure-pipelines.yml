@@ -7,8 +7,6 @@ variables:
   vmImageName: 'ubuntu-latest'
 
   azureServiceConnection: 'mynewsub'
-  resourceGroupName: 'automation'
-  templateFile: 'AppService.bicep'
 pool:
   vmImage: $(vmImageName)
 
@@ -28,6 +26,5 @@ steps:
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
-      az deployment group create --name Deploy2appservie --resource-group $(resourceGroupName) --template-file $(templateFile)\
-      --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=centralus
+                az deployment group create   --name ExampleDeployment   --resource-group automation   --template-file appservice.bicep   --parameters website=host1 linuxFxVersion=adamkwolek/firstimage location=eastus
 
