@@ -1,0 +1,131 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+        {
+            "type": "Microsoft.Cdn/Profiles",
+            "apiVersion": "2021-06-01",
+            "name": "fd",
+            "location": "Global",
+            "tags": {},
+            "sku": {
+                "name": "Standard_AzureFrontDoor"
+            },
+            "properties": {
+                "frontDoorId": null,
+                "originResponseTimeoutSeconds": 60
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/Profiles/AfdEndpoints",
+            "apiVersion": "2021-06-01",
+            "name": "fd/end1",
+            "location": "Global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/Profiles', 'fd')]"
+            ],
+            "properties": {
+                "hostName": "end1-dhd3ghf0f0d0bagr.z01.azurefd.net",
+                "enabledState": "Enabled",
+                "deploymentStatus": null
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/Profiles/OriginGroups",
+            "apiVersion": "2021-06-01",
+            "name": "fd/orgin",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/Profiles', 'fd')]"
+            ],
+            "properties": {
+                "loadBalancingSettings": {
+                    "sampleSize": 4,
+                    "successfulSamplesRequired": 3,
+                    "additionalLatencyInMilliseconds": 50
+                },
+                "healthProbeSettings": {
+                    "probePath": "/",
+                    "probeRequestType": "HEAD",
+                    "probeProtocol": "Http",
+                    "probeIntervalInSeconds": 100
+                },
+                "trafficRestorationTimeToHealedOrNewEndpointsInMinutes": null,
+                "sessionAffinityState": "Disabled",
+                "deploymentStatus": null
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/Profiles/OriginGroups/Origins",
+            "apiVersion": "2021-06-01",
+            "name": "fd/orgin/orgin1",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/Profiles/OriginGroups', 'fd', 'orgin')]"
+            ],
+            "properties": {
+                "hostName": "host1-5zkxjsckejxcq.azurewebsites.net",
+                "httpPort": 80,
+                "httpsPort": 443,
+                "originHostHeader": "host1-5zkxjsckejxcq.azurewebsites.net",
+                "priority": 1,
+                "weight": 1000,
+                "enforceCertificateNameCheck": true,
+                "sharedPrivateLinkResource": null,
+                "enabledState": "Enabled",
+                "deploymentStatus": null
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/Profiles/OriginGroups/Origins",
+            "apiVersion": "2021-06-01",
+            "name": "fd/orgin/orgin2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/Profiles/OriginGroups', 'fd', 'orgin')]"
+            ],
+            "properties": {
+                "hostName": "host2-5zkxjsckejxcq.azurewebsites.net",
+                "httpPort": 80,
+                "httpsPort": 443,
+                "originHostHeader": "host2-5zkxjsckejxcq.azurewebsites.net",
+                "priority": 1,
+                "weight": 1000,
+                "enforceCertificateNameCheck": true,
+                "sharedPrivateLinkResource": null,
+                "enabledState": "Enabled",
+                "deploymentStatus": null
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/Profiles/AfdEndpoints/Routes",
+            "apiVersion": "2021-06-01",
+            "name": "fd/end1/rout1",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/Profiles/AfdEndpoints', 'fd', 'end1')]",
+                "[resourceId('Microsoft.Cdn/Profiles/OriginGroups', 'fd', 'orgin')]",
+                "[resourceId('Microsoft.Cdn/Profiles/OriginGroups/Origins', 'fd', 'orgin', 'orgin1')]",
+                "[resourceId('Microsoft.Cdn/Profiles/OriginGroups/Origins', 'fd', 'orgin', 'orgin2')]"
+            ],
+            "properties": {
+                "customDomains": [],
+                "originGroup": {
+                    "id": "/subscriptions/3b74974d-577a-454f-9d60-a03809505612/resourceGroups/automation/providers/Microsoft.Cdn/profiles/fd/originGroups/orgin"
+                },
+                "originPath": null,
+                "ruleSets": [],
+                "supportedProtocols": [
+                    "Http",
+                    "Https"
+                ],
+                "patternsToMatch": [
+                    "/*"
+                ],
+                "forwardingProtocol": "HttpOnly",
+                "linkToDefaultDomain": "Enabled",
+                "httpsRedirect": "Enabled",
+                "enabledState": "Enabled",
+                "deploymentStatus": null,
+                "provisioningState": null,
+                "cacheConfiguration": null
+            }
+        }
+    ]
+}
